@@ -1,0 +1,130 @@
+Input :
+6
+s(10:00:00)
+w(10:00:10)
+s(10:00:15)
+w(10:00:22)
+s(10:00:30)
+e(10:00:40)
+
+Code:
+import java.util.*;
+class Journ
+{
+	int bfare=10;
+	
+	int totwaittime=0;
+	int tottratime=0;
+	
+	double totwaitrate=0;
+	double tottrarate=0;
+	
+	int starttimehr=0;
+	int starttimemin=0;
+	int starttimesec=0;
+	
+	int endtimehr=0;
+	int endtimemin=0;
+	int endtimesec=0;
+	
+	public void initial(int h,int m,int s)
+	{
+		this.starttimehr=h;
+		this.starttimemin=m;
+		this.starttimesec=s;
+	}
+	
+	
+	public void calcwaitrate()
+	{
+	this.totwaitrate=Math.ceil(this.totwaittime*0.10);	
+	}
+	
+	public void calctravelrate()
+	{
+	this.tottrarate=this.tottratime*1;	
+	}
+	
+	
+	public void calctraveltime(int a)
+	{
+		this.tottratime=tottratime+a;
+	}
+	
+	public void calcwaittime(int a)
+	{
+		this.totwaittime=totwaittime+a;
+	}
+	public void ender(int h,int m,int s)
+	{
+		this.endtimehr=h;
+		this.endtimemin=m;
+		this.endtimesec=s;
+	}
+	public void print()
+	{
+		System.out.println("Travel Started Time:"+this.starttimehr+":"+this.starttimemin+":"+this.starttimesec);
+		System.out.println("Base Fare:"+bfare);
+		System.out.println("Travel End Time:"+this.endtimehr+":"+this.endtimemin+":"+this.endtimesec);
+		System.out.println("Travel Time:"+this.tottratime+ " "+ "Travel Rate:"+Math.ceil(this.tottrarate));
+		System.out.println("Wait Time:"+this.totwaittime+ " "+ "Wait Rate:"+Math.ceil(this.totwaitrate));
+		double tot=this.tottrarate + this.totwaitrate+10;
+		System.out.println("Total fare:" + tot);
+	}
+	
+}
+public class Test {
+	public static void main(String args[])
+	{
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter the no. of Inputs :");
+		int n=scan.nextInt();
+		Journ obj = new Journ();
+		int count=1;
+		String[] inputs = new String[n];
+		for(int i=0;i<n;i++)
+		{
+			inputs[i]=scan.next();
+			if((inputs[i].charAt(0)=='s')&&(count==1))
+			{
+				int h=Integer.parseInt(inputs[i].substring(2,4));
+				int m=Integer.parseInt(inputs[i].substring(5,7));
+				int s=Integer.parseInt(inputs[i].substring(8,10));
+				obj.initial(h,m,s);
+			}
+			else if(inputs[i].charAt(0)=='s')
+			{
+				int val=Integer.parseInt(inputs[i].substring(8,10))-Integer.parseInt(inputs[i-1].substring(8,10));
+				obj.calcwaittime(val);	
+			}
+			else if(inputs[i].charAt(0)=='w')
+			{
+				int val=Integer.parseInt(inputs[i].substring(8,10))-Integer.parseInt(inputs[i-1].substring(8,10));
+				obj.calctraveltime(val);
+			}
+			else if(inputs[i].charAt(0)=='e')
+			{
+			int h=Integer.parseInt(inputs[i].substring(2,4));
+			int m=Integer.parseInt(inputs[i].substring(5,7));
+			int s=Integer.parseInt(inputs[i].substring(8,10));
+			int val=Integer.parseInt(inputs[i].substring(8,10))-Integer.parseInt(inputs[i-1].substring(8,10));
+			obj.calctraveltime(val);
+			obj.ender(h, m, s);
+			obj.calcwaitrate();
+			obj.calctravelrate();
+			obj.print();	
+			}
+			count++;
+		}
+		
+	}
+
+}
+
+Output :
+Travel Started Time:10:0:0
+Base Fare:10
+Travel End Time:10:0:40
+Travel Time:27 Travel Rate:27.0
+Wait Time:13 Wait Rate:2.0
+Total fare:39.0
